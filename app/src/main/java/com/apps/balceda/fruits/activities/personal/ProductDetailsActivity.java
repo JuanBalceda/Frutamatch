@@ -66,14 +66,14 @@ public class ProductDetailsActivity extends AppCompatActivity {
         descripcion.setText("Frutas: " + detalle);
 
         precioUnit = productPrice + adicional;
-        precio.setText("Precio: S/ " + precioUnit);
+        precio.setText("Precio: " + String.format("S/ %1$,.2f", precioUnit));
 
         precioSubTotal = precioUnit;
-        subtotal.setText("Total a pagar: S/ " + precioUnit);
+        subtotal.setText("Total a pagar: " + String.format("S/ %1$,.2f", precioUnit));
         // OnValueChangeListener
         numberPicker.setOnValueChangedListener((NumberPicker picker, int oldVal, int newVal) -> {
             precioSubTotal = precioUnit * newVal;
-            subtotal.setText("Total a pagar: S/ " + precioSubTotal);
+            subtotal.setText("Total a pagar: " + String.format("S/ %1$,.2f", precioSubTotal));
         });
 
         botonComprar.setOnClickListener((view) -> {

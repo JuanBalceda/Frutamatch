@@ -19,6 +19,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.wallet.AutoResolveHelper;
+import com.google.android.gms.wallet.CardInfo;
 import com.google.android.gms.wallet.CardRequirements;
 import com.google.android.gms.wallet.IsReadyToPayRequest;
 import com.google.android.gms.wallet.PaymentData;
@@ -153,7 +154,7 @@ public class ShopCarActivity extends AppCompatActivity {
                         .setTransactionInfo(
                                 TransactionInfo.newBuilder()
                                         .setTotalPriceStatus(WalletConstants.TOTAL_PRICE_STATUS_FINAL)
-                                        .setTotalPrice("10.00")
+                                        .setTotalPrice("1.00")
                                         .setCurrencyCode("USD")
                                         .build())
                         .addAllowedPaymentMethod(WalletConstants.PAYMENT_METHOD_CARD)
@@ -172,8 +173,9 @@ public class ShopCarActivity extends AppCompatActivity {
                 PaymentMethodTokenizationParameters.newBuilder()
                         .setPaymentMethodTokenizationType(
                                 WalletConstants.PAYMENT_METHOD_TOKENIZATION_TYPE_PAYMENT_GATEWAY)
-                        .addParameter("gateway", "example")
-                        .addParameter("gatewayMerchantId", "exampleGatewayMerchantId")
+                        .addParameter("gateway", "stripe")
+                        .addParameter("stripe:publishableKey", "pk_test_N9MHqeDKqEIdUdyKGAwgoFMW")
+                        .addParameter("stripe:version", "5.1.0")
                         .build();
 
         request.setPaymentMethodTokenizationParameters(params);
@@ -189,10 +191,15 @@ public class ShopCarActivity extends AppCompatActivity {
                     case Activity.RESULT_OK:
                         PaymentData paymentData = PaymentData.getFromIntent(data);
                         String token = paymentData.getPaymentMethodToken().getToken();
+                        CardInfo info = paymentData.getCardInfo();
+
+                        Toast.makeText(getApplicationContext(),"Gracias por tu compra, "+info.getCardDescription(), Toast.LENGTH_SHORT).show();
                         break;
                     case Activity.RESULT_CANCELED:
+                        Toast.makeText(getApplicationContext(),"No se realizó la compra", Toast.LENGTH_SHORT).show();
                         break;
                     case AutoResolveHelper.RESULT_ERROR:
+                        Toast.makeText(getApplicationContext(),"Ocurrió un error", Toast.LENGTH_SHORT).show();
                         Status status = AutoResolveHelper.getStatusFromIntent(data);
                         // Log the status for debugging.
                         // Generally, there is no need to show an error to
