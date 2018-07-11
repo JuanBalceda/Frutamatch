@@ -38,12 +38,14 @@
         <Button
             android:id="@+id/personal_toShop"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:layout_weight="1"
             android:background="@drawable/boton_comprar"
-            android:text="Agregar al Carrito"
-            android:textColor="@android:color/white"/>
+            android:text="Continuar"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
     </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>
