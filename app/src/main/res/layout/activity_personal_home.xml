@@ -15,7 +15,7 @@ tools:openDrawer="start">
     android:weightSum="10">
 
     <include
-        layout="@layout/app_bar_home" />
+        layout="@layout/content_home" />
 
 </LinearLayout>
 

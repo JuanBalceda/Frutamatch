@@ -8,4 +8,10 @@
         android:icon="@drawable/ic_shopping_cart_white_24dp"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/exit"
+        android:icon="@drawable/ic_exit"
+        android:orderInCategory="200"
+        app:showAsAction="never"
+        android:title="Cerrar sesión" />
 </menu>

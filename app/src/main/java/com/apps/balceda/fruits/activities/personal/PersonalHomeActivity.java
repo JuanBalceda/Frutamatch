@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.apps.balceda.fruits.R;
 import com.apps.balceda.fruits.activities.ShopCarActivity;
+import com.apps.balceda.fruits.activities.login.LoginActivity;
 import com.apps.balceda.fruits.models.Product;
 import com.apps.balceda.fruits.viewholders.ProductViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -36,9 +37,6 @@ public class PersonalHomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_home);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         //iniciar Firebase
         database = FirebaseDatabase.getInstance();
@@ -109,6 +107,13 @@ public class PersonalHomeActivity extends AppCompatActivity {
             case R.id.shopping:
                 intent = new Intent(this, ShopCarActivity.class);
                 startActivity(intent);
+                return true;
+
+            case R.id.exit:
+                LoginActivity.signOut();
+                intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

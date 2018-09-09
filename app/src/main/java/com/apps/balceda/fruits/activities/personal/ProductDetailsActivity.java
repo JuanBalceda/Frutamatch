@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.apps.balceda.fruits.R;
 import com.apps.balceda.fruits.activities.ShopCarActivity;
 import com.apps.balceda.fruits.activities.hogar.HogarHomeActivity;
+import com.apps.balceda.fruits.activities.login.LoginActivity;
 import com.apps.balceda.fruits.models.Fruit;
 import com.apps.balceda.fruits.models.Product;
 import com.apps.balceda.fruits.models.ShopCar;
@@ -110,6 +111,12 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, ShopCarActivity.class);
                 startActivity(intent);
                 //finish();
+                return true;
+            case R.id.exit:
+                LoginActivity.signOut();
+                intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
