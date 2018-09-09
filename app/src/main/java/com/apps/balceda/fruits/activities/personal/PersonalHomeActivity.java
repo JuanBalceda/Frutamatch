@@ -1,11 +1,11 @@
 package com.apps.balceda.fruits.activities.personal;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
-public class PersonalHomeActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class PersonalHomeActivity extends AppCompatActivity {
 
     FirebaseDatabase database;
     DatabaseReference products;
@@ -39,8 +39,6 @@ public class PersonalHomeActivity extends AppCompatActivity implements SearchVie
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Futamatch Personal");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //iniciar Firebase
         database = FirebaseDatabase.getInstance();
@@ -67,6 +65,7 @@ public class PersonalHomeActivity extends AppCompatActivity implements SearchVie
                 viewHolder.setImagenURL(model.getImage());
             }
 
+            @NonNull
             @Override
             public ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 final ProductViewHolder viewHolder = super.onCreateViewHolder(parent, viewType);
@@ -82,6 +81,7 @@ public class PersonalHomeActivity extends AppCompatActivity implements SearchVie
 
                     @Override
                     public void onItemLongClick(View view, int position) {
+                        //Info
                     }
                 });
                 return viewHolder;
@@ -90,17 +90,18 @@ public class PersonalHomeActivity extends AppCompatActivity implements SearchVie
         recycler_menu.setAdapter(adapter);
     }
 
+    /*
+     * Load menu on the toolbar
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search_home, menu);
-
-        final MenuItem search = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) search.getActionView();
-
-        searchView.setOnQueryTextListener(this);
+        getMenuInflater().inflate(R.menu.home, menu);
         return true;
     }
 
+    /*
+     * Load options for the menu on the toolbar
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
@@ -109,39 +110,8 @@ public class PersonalHomeActivity extends AppCompatActivity implements SearchVie
                 intent = new Intent(this, ShopCarActivity.class);
                 startActivity(intent);
                 return true;
-            //Go Back to home Activity
-            case android.R.id.home:
-                finish();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        String query;
-        if (newText.isEmpty()) {
-            query = "";
-        } else {
-            query = Character.toUpperCase(newText.charAt(0)) + newText.substring(1);
-        }
-        loadMenu(query.trim());
-        adapter.notifyDataSetChanged();
-        return true;
-    }
-
-    private void loadMenu(String searchText) {
-        if (searchText.isEmpty()) {
-            loadFirebaseData(products);
-        } else {
-            Query fruitsFiltered = products.orderByChild("name").startAt(searchText).endAt(searchText + "\uf8ff");
-            loadFirebaseData(fruitsFiltered);
         }
     }
 

@@ -52,7 +52,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
         frutasProducto = (ArrayList<Fruit>) getIntent().getExtras().get("frutasProducto");
 
 
-
         imagen = findViewById(R.id.imagen);
         productName = findViewById(R.id.fruta);
         descripcion = findViewById(R.id.descripcion);
@@ -77,21 +76,21 @@ public class ProductDetailsActivity extends AppCompatActivity {
         });
 
         botonComprar.setOnClickListener((view) -> {
-          ShopCar newShopCar = new ShopCar();
-          //Setting Fruit
-          Product productoSolicitado = new Product();
-          productoSolicitado.setName(productName.getText().toString());
-          productoSolicitado.setImage(getIntent().getExtras().getString("productImg"));
-          productoSolicitado.setPrice(String.valueOf(precioUnit));
-          newShopCar.setProduct(productoSolicitado);
+            ShopCar newShopCar = new ShopCar();
+            //Setting Fruit
+            Product productoSolicitado = new Product();
+            productoSolicitado.setName(productName.getText().toString());
+            productoSolicitado.setImage(getIntent().getExtras().getString("productImg"));
+            productoSolicitado.setPrice(String.valueOf(precioUnit));
+            newShopCar.setProduct(productoSolicitado);
 
-          newShopCar.setPedido(frutasProducto);
-          newShopCar.setSubTotal(precioSubTotal);
+            newShopCar.setPedido(frutasProducto);
+            newShopCar.setSubTotal(precioSubTotal);
 
-          //Adding to Final List
-          HogarHomeActivity.pedidoFinal.add(newShopCar);
-          Toast.makeText(getApplicationContext(), "Añadido al carrito",Toast.LENGTH_LONG).show();
-
+            //Adding to Final List
+            HogarHomeActivity.pedidoFinal.add(newShopCar);
+            Intent intent = new Intent(this, ShopCarActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -110,7 +109,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
             case R.id.shopping:
                 Intent intent = new Intent(this, ShopCarActivity.class);
                 startActivity(intent);
-                finish();
+                //finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
