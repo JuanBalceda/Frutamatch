@@ -7,69 +7,69 @@ import android.widget.TextView;
 
 import com.apps.balceda.fruits.R;
 
-public class ProductViewHolder extends RecyclerView.ViewHolder{
+public class ProductViewHolder extends RecyclerView.ViewHolder {
 
-  private TextView productName;
-  private ImageView productImage;
-  private String productPrice;
-  private String imagenURL;
+    private TextView productName;
+    private ImageView productImage;
+    private String productPrice;
+    private String imagenURL;
 
-  private ProductViewHolder.ClickListener mClickListener;
+    private ProductViewHolder.ClickListener mClickListener;
 
-  public ProductViewHolder(View itemView) {
-    super(itemView);
+    public ProductViewHolder(View itemView) {
+        super(itemView);
 
-    productImage = itemView.findViewById(R.id.fruit_image);
-    productName = itemView.findViewById(R.id.fruit_name);
+        productImage = itemView.findViewById(R.id.fruit_image);
+        productName = itemView.findViewById(R.id.fruit_name);
 
-    itemView.setOnClickListener((v) -> {
-       mClickListener.onItemClick(v, getAdapterPosition());
-    });
-    itemView.setOnLongClickListener((v) -> {
-        mClickListener.onItemLongClick(v, getAdapterPosition());
-        return true;
-    });
+        itemView.setOnClickListener((v) -> mClickListener.onItemClick(v, getAdapterPosition()));
+        itemView.setOnLongClickListener((v) -> {
+            mClickListener.onItemLongClick(v, getAdapterPosition());
+            return true;
+        });
 
-  }
-  //Interface to send callbacks...
-  public interface ClickListener{
-    void onItemClick(View view, int position);
-    void onItemLongClick(View view, int position);
-  }
+    }
 
-  public void setOnClickListener(ProductViewHolder.ClickListener clickListener){
-    mClickListener = clickListener;
-  }
+    //Interface to send callbacks...
+    public interface ClickListener {
+        void onItemClick(View view, int position);
 
-  public TextView getProductName() {
-    return productName;
-  }
+        void onItemLongClick(View view, int position);
+    }
 
-  public void setProductName(TextView fruitName) {
-    this.productName = fruitName;
-  }
+    public void setOnClickListener(ProductViewHolder.ClickListener clickListener) {
+        mClickListener = clickListener;
+    }
 
-  public ImageView getProductImage() {
-    return productImage;
-  }
+    public TextView getProductName() {
+        return productName;
+    }
 
-  public void setProductImage(ImageView productImage) {
-    this.productImage = productImage;
-  }
+    public void setProductName(TextView fruitName) {
+        this.productName = fruitName;
+    }
 
-  public String getProductPrice() {
-    return productPrice;
-  }
+    public ImageView getProductImage() {
+        return productImage;
+    }
 
-  public void setProductPrice(String productPrice) {
-    this.productPrice = productPrice;
-  }
+    public void setProductImage(ImageView productImage) {
+        this.productImage = productImage;
+    }
 
-  public String getImagenURL() {
-    return imagenURL;
-  }
+    public String getProductPrice() {
+        return productPrice;
+    }
 
-  public void setImagenURL(String imagenURL) {
-    this.imagenURL = imagenURL;
-  }
+    public void setProductPrice(String productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    public String getImagenURL() {
+        return imagenURL;
+    }
+
+    public void setImagenURL(String imagenURL) {
+        this.imagenURL = imagenURL;
+    }
 }

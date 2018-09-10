@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.apps.balceda.fruits.R;
+import com.apps.balceda.fruits.activities.login.LoginActivity;
+import com.apps.balceda.fruits.activities.personal.PersonalHomeActivity;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -19,7 +21,7 @@ public class SplashActivity extends AppCompatActivity {
     TimerTask timerTask = new TimerTask() {
       @Override
       public void run() {
-        Intent intent = new Intent(SplashActivity.this, HomeSelectorActivity.class);
+        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
       }

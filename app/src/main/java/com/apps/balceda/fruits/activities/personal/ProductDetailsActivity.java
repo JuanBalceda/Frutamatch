@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.apps.balceda.fruits.R;
 import com.apps.balceda.fruits.activities.ShopCarActivity;
 import com.apps.balceda.fruits.activities.hogar.HogarHomeActivity;
+import com.apps.balceda.fruits.activities.login.LoginActivity;
 import com.apps.balceda.fruits.models.Fruit;
 import com.apps.balceda.fruits.models.Product;
 import com.apps.balceda.fruits.models.ShopCar;
@@ -52,7 +53,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
         frutasProducto = (ArrayList<Fruit>) getIntent().getExtras().get("frutasProducto");
 
 
-
         imagen = findViewById(R.id.imagen);
         productName = findViewById(R.id.fruta);
         descripcion = findViewById(R.id.descripcion);
@@ -77,21 +77,21 @@ public class ProductDetailsActivity extends AppCompatActivity {
         });
 
         botonComprar.setOnClickListener((view) -> {
-          ShopCar newShopCar = new ShopCar();
-          //Setting Fruit
-          Product productoSolicitado = new Product();
-          productoSolicitado.setName(productName.getText().toString());
-          productoSolicitado.setImage(getIntent().getExtras().getString("productImg"));
-          productoSolicitado.setPrice(String.valueOf(precioUnit));
-          newShopCar.setProduct(productoSolicitado);
+            ShopCar newShopCar = new ShopCar();
+            //Setting Fruit
+            Product productoSolicitado = new Product();
+            productoSolicitado.setName(productName.getText().toString());
+            productoSolicitado.setImage(getIntent().getExtras().getString("productImg"));
+            productoSolicitado.setPrice(String.valueOf(precioUnit));
+            newShopCar.setProduct(productoSolicitado);
 
-          newShopCar.setPedido(frutasProducto);
-          newShopCar.setSubTotal(precioSubTotal);
+            newShopCar.setPedido(frutasProducto);
+            newShopCar.setSubTotal(precioSubTotal);
 
-          //Adding to Final List
-          HogarHomeActivity.pedidoFinal.add(newShopCar);
-          Toast.makeText(getApplicationContext(), "Añadido al carrito",Toast.LENGTH_LONG).show();
-
+            //Adding to Final List
+            HogarHomeActivity.pedidoFinal.add(newShopCar);
+            Intent intent = new Intent(this, ShopCarActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -109,6 +109,12 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 return true;
             case R.id.shopping:
                 Intent intent = new Intent(this, ShopCarActivity.class);
+                startActivity(intent);
+                //finish();
+                return true;
+            case R.id.exit:
+                LoginActivity.signOut();
+                intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 finish();
                 return true;
