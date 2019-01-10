@@ -41,6 +41,7 @@
         <activity
             android:name=".activities.ShopCarActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".activities.payment.CulqiPaymentActivity"></activity>
     </application>
 
 </manifest>
