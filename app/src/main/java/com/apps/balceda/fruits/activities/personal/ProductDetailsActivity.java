@@ -8,11 +8,10 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.apps.balceda.fruits.R;
 import com.apps.balceda.fruits.activities.ShopCarActivity;
-import com.apps.balceda.fruits.activities.hogar.HogarHomeActivity;
+import com.apps.balceda.fruits.activities.home.HomeActivity;
 import com.apps.balceda.fruits.activities.login.LoginActivity;
 import com.apps.balceda.fruits.models.Fruit;
 import com.apps.balceda.fruits.models.Product;
@@ -26,15 +25,15 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     String product;
     double productPrice;
-    String productImg;
-    double adicional;
-    String detalle;
-    ArrayList<Fruit> frutasProducto;
+    String productImage;
+    double additional;
+    String detail;
+    ArrayList<Fruit> fruits;
 
-    TextView productName, precio, subtotal, descripcion;
-    ImageView imagen;
-    double precioUnit, precioSubTotal;
-    Button botonComprar;
+    TextView productName, priceTextView, subtotal, description;
+    ImageView imageView;
+    double unitPrice, subtotalPrice;
+    Button shopButton;
 
 
     @Override
@@ -47,49 +46,49 @@ public class ProductDetailsActivity extends AppCompatActivity {
         //Intent's extras
         product = getIntent().getExtras().getString("productName");
         productPrice = Double.parseDouble(getIntent().getExtras().getString("productPrice"));
-        productImg = getIntent().getExtras().getString("productImg");
-        adicional = getIntent().getExtras().getDouble("adicional");
-        detalle = getIntent().getExtras().getString("detalle");
-        frutasProducto = (ArrayList<Fruit>) getIntent().getExtras().get("frutasProducto");
+        productImage = getIntent().getExtras().getString("productImage");
+        additional = getIntent().getExtras().getDouble("additional");
+        detail = getIntent().getExtras().getString("detail");
+        fruits = (ArrayList<Fruit>) getIntent().getExtras().get("fruits");
 
 
-        imagen = findViewById(R.id.imagen);
-        productName = findViewById(R.id.fruta);
-        descripcion = findViewById(R.id.descripcion);
-        precio = findViewById(R.id.precio);
+        imageView = findViewById(R.id.image);
+        productName = findViewById(R.id.txt_fruit);
+        description = findViewById(R.id.txt_description);
+        priceTextView = findViewById(R.id.txt_price);
         NumberPicker numberPicker = findViewById(R.id.number_picker);
         subtotal = findViewById(R.id.subtotal);
-        botonComprar = findViewById(R.id.toShop);
+        shopButton = findViewById(R.id.toShop);
 
-        Picasso.with(getBaseContext()).load(productImg).into(imagen);
+        Picasso.with(getBaseContext()).load(productImage).into(imageView);
         productName.setText(product);
-        descripcion.setText("Frutas: " + detalle);
+        description.setText("Frutas: " + detail);
 
-        precioUnit = productPrice + adicional;
-        precio.setText("Precio: " + String.format("S/ %1$,.2f", precioUnit));
+        unitPrice = productPrice + additional;
+        priceTextView.setText("Precio: " + String.format("S/ %1$,.2f", unitPrice));
 
-        precioSubTotal = precioUnit;
-        subtotal.setText("Total a pagar: " + String.format("S/ %1$,.2f", precioUnit));
+        subtotalPrice = unitPrice;
+        subtotal.setText("Total a pagar: " + String.format("S/ %1$,.2f", unitPrice));
         // OnValueChangeListener
         numberPicker.setOnValueChangedListener((NumberPicker picker, int oldVal, int newVal) -> {
-            precioSubTotal = precioUnit * newVal;
-            subtotal.setText("Total a pagar: " + String.format("S/ %1$,.2f", precioSubTotal));
+            subtotalPrice = unitPrice * newVal;
+            subtotal.setText("Total a pagar: " + String.format("S/ %1$,.2f", subtotalPrice));
         });
 
-        botonComprar.setOnClickListener((view) -> {
+        shopButton.setOnClickListener((view) -> {
             ShopCar newShopCar = new ShopCar();
             //Setting Fruit
             Product productoSolicitado = new Product();
             productoSolicitado.setName(productName.getText().toString());
-            productoSolicitado.setImage(getIntent().getExtras().getString("productImg"));
-            productoSolicitado.setPrice(String.valueOf(precioUnit));
+            productoSolicitado.setImage(getIntent().getExtras().getString("productImage"));
+            productoSolicitado.setPrice(String.valueOf(unitPrice));
             newShopCar.setProduct(productoSolicitado);
 
-            newShopCar.setPedido(frutasProducto);
-            newShopCar.setSubTotal(precioSubTotal);
+            newShopCar.setOrder(fruits);
+            newShopCar.setSubTotal(subtotalPrice);
 
             //Adding to Final List
-            HogarHomeActivity.pedidoFinal.add(newShopCar);
+            HomeActivity.finalOrder.add(newShopCar);
             Intent intent = new Intent(this, ShopCarActivity.class);
             startActivity(intent);
         });

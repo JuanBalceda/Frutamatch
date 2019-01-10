@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import com.apps.balceda.fruits.R;
 import com.apps.balceda.fruits.activities.login.LoginActivity;
-import com.apps.balceda.fruits.activities.personal.PersonalHomeActivity;
 
 import java.util.Timer;
 import java.util.TimerTask;

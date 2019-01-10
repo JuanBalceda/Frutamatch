@@ -1,4 +1,4 @@
-package com.apps.balceda.fruits.activities.hogar;
+package com.apps.balceda.fruits.activities.home;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.apps.balceda.fruits.R;
 import com.apps.balceda.fruits.activities.ShopCarActivity;
-import com.apps.balceda.fruits.activities.hogar.HogarHomeActivity;
 import com.apps.balceda.fruits.models.Fruit;
 import com.apps.balceda.fruits.models.ShopCar;
 import com.shawnlin.numberpicker.NumberPicker;
@@ -22,10 +21,10 @@ import java.util.ArrayList;
 
 public class FruitDetailsActivity extends AppCompatActivity {
 
-    TextView fruta, precio, subtotal;
-    ImageView imagen;
-    double precioKilo, precioSubTotal;
-    Button botonComprar;
+    TextView fruit, price, subtotal;
+    ImageView image;
+    double pricePerKilogram, subTotalPrice;
+    Button shopButton;
 
 
     @Override
@@ -35,45 +34,45 @@ public class FruitDetailsActivity extends AppCompatActivity {
         setTitle("Detalles de la Fruta");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        imagen = findViewById(R.id.imagen);
-        fruta = findViewById(R.id.fruta);
-        precio = findViewById(R.id.precio);
+        image = findViewById(R.id.image);
+        fruit = findViewById(R.id.txt_fruit);
+        price = findViewById(R.id.txt_price);
         NumberPicker numberPicker = findViewById(R.id.number_picker);
         subtotal = findViewById(R.id.subtotal);
-        botonComprar = findViewById(R.id.toShop);
+        shopButton = findViewById(R.id.toShop);
 
-        Picasso.with(getBaseContext()).load(getIntent().getExtras().getString("imagen")).into(imagen);
-        fruta.setText(getIntent().getExtras().getString("frutaName"));
-        precioKilo = Double.parseDouble(getIntent().getExtras().getString("precio"));
-        precio.setText("Precio por kilogramo: S/ " + precioKilo);
+        Picasso.with(getBaseContext()).load(getIntent().getExtras().getString("image")).into(image);
+        fruit.setText(getIntent().getExtras().getString("frutaName"));
+        pricePerKilogram = Double.parseDouble(getIntent().getExtras().getString("price"));
+        price.setText("Precio por kilogramo: S/ " + pricePerKilogram);
 
         // OnClickListener
         numberPicker.setOnClickListener((view) -> {
         });
         // OnValueChangeListener
         numberPicker.setOnValueChangedListener((NumberPicker picker, int oldVal, int newVal) -> {
-            precioSubTotal = precioKilo * newVal;
-            subtotal.setText("Total a pagar: S/ " + precioSubTotal);
+            subTotalPrice = pricePerKilogram * newVal;
+            subtotal.setText("Total a pagar: S/ " + subTotalPrice);
         });
-        precioSubTotal = precioKilo;
-        subtotal.setText("Total a pagar: S/ " + precioKilo);
+        subTotalPrice = pricePerKilogram;
+        subtotal.setText("Total a pagar: S/ " + pricePerKilogram);
 
-        botonComprar.setOnClickListener((view) -> {
+        shopButton.setOnClickListener((view) -> {
             ShopCar newShopCar = new ShopCar();
             //Setting Fruit
             Fruit frutaSolicitada = new Fruit();
-            frutaSolicitada.setName(fruta.getText().toString());
-            frutaSolicitada.setImage(getIntent().getExtras().getString("imagen"));
-            frutaSolicitada.setPrice(String.valueOf(precioKilo));
+            frutaSolicitada.setName(fruit.getText().toString());
+            frutaSolicitada.setImage(getIntent().getExtras().getString("image"));
+            frutaSolicitada.setPrice(String.valueOf(pricePerKilogram));
 
             //Adding Fruit to ShopCar
             ArrayList<Fruit> pedido = new ArrayList<>();
             pedido.add(frutaSolicitada);
-            newShopCar.setPedido(pedido);
-            newShopCar.setSubTotal(precioSubTotal);
+            newShopCar.setOrder(pedido);
+            newShopCar.setSubTotal(subTotalPrice);
             newShopCar.setProduct(null);
             //Adding to Final List
-            HogarHomeActivity.pedidoFinal.add(newShopCar);
+            HomeActivity.finalOrder.add(newShopCar);
             Toast.makeText(getApplicationContext(), "Añadido al carrito", Toast.LENGTH_LONG).show();
         });
     }

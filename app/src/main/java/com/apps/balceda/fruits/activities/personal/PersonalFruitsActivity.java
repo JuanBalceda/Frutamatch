@@ -31,21 +31,21 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
     String productName;
     String productPrice;
     String productImg;
-    double adicional;
-    String detalle;
+    double additional;
+    String detail;
 
     FirebaseDatabase database;
-    DatabaseReference fruits;
+    DatabaseReference fruitsReference;
 
-    RecyclerView recycler_menu;
+    RecyclerView recyclerMenu;
     RecyclerView.LayoutManager layoutManager;
 
     FirebaseRecyclerAdapter<Fruit, PersonalFruitViewHolder> adapter;
 
     Button button;
 
-    ArrayList<PersonalFruitViewHolder> frutas;
-    ArrayList<Fruit> frutasProducto;
+    ArrayList<PersonalFruitViewHolder> personalFruitViewHolders;
+    ArrayList<Fruit> fruits;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,26 +54,26 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Seleccione sus frutas");
+        toolbar.setTitle("Seleccione sus personalFruitViewHolders");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         productName = getIntent().getExtras().getString("productName");
         productPrice = getIntent().getExtras().getString("productPrice");
-        productImg = getIntent().getExtras().getString("productImg");
+        productImg = getIntent().getExtras().getString("productImage");
 
-        frutas = new ArrayList<>();
-        frutasProducto = new ArrayList<>();
+        personalFruitViewHolders = new ArrayList<>();
+        fruits = new ArrayList<>();
 
         //iniciar Firebase
         database = FirebaseDatabase.getInstance();
-        fruits = database.getReference("Fruits");
+        fruitsReference = database.getReference("Fruits");
 
         //Lista
-        recycler_menu = findViewById(R.id.recycler_menu);
-        recycler_menu.setHasFixedSize(true);
+        recyclerMenu = findViewById(R.id.recycler_menu);
+        recyclerMenu.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        recycler_menu.setLayoutManager(layoutManager);
-        loadFirebaseData(fruits);
+        recyclerMenu.setLayoutManager(layoutManager);
+        loadFirebaseData(fruitsReference);
 
         button = findViewById(R.id.personal_toShop);
         button.setOnClickListener((v) -> {
@@ -82,26 +82,26 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
     }
 
     private void calcular() {
-        if (frutas.size() > 0) {
-            detalle = "";
-            for (int i = 0; i < frutas.size(); i++) {
-                adicional += frutas.get(i).getSubtotal();
-                if ((i + 1) == frutas.size()) {
-                    detalle += frutas.get(i).getFruitName().getText().toString() + ".";
+        if (personalFruitViewHolders.size() > 0) {
+            detail = "";
+            for (int i = 0; i < personalFruitViewHolders.size(); i++) {
+                additional += personalFruitViewHolders.get(i).getSubtotal();
+                if ((i + 1) == personalFruitViewHolders.size()) {
+                    detail += personalFruitViewHolders.get(i).getFruitName().getText().toString() + ".";
                 } else {
-                    detalle += frutas.get(i).getFruitName().getText().toString() + ", ";
+                    detail += personalFruitViewHolders.get(i).getFruitName().getText().toString() + ", ";
                 }
             }
             Intent intent = new Intent(PersonalFruitsActivity.this, ProductDetailsActivity.class);
             intent.putExtra("productName", productName);
             intent.putExtra("productPrice", productPrice);
-            intent.putExtra("productImg", productImg);
-            intent.putExtra("adicional", adicional);
-            intent.putExtra("detalle", detalle);
-            intent.putExtra("frutasProducto", frutasProducto);
+            intent.putExtra("productImage", productImg);
+            intent.putExtra("additional", additional);
+            intent.putExtra("detail", detail);
+            intent.putExtra("fruits", fruits);
             startActivity(intent);
         } else {
-            Toast.makeText(getApplicationContext(), "Seleccione las frutas", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Seleccione las personalFruitViewHolders", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -111,16 +111,16 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
                 PersonalFruitViewHolder.class, databaseReference) {
             @Override
             protected void populateViewHolder(final PersonalFruitViewHolder viewHolder, final Fruit model, int position) {
-                viewHolder.getPriceUnit().setText("S/ " + model.getPriceUnit());
+                viewHolder.getUnitPrice().setText("S/ " + model.getPriceUnit());
                 viewHolder.getFruitName().setText(model.getName());
                 Picasso.with(getBaseContext()).load(model.getImage()).into(viewHolder.getFruitImage());
-                viewHolder.setImagenURL(model.getImage());
-                viewHolder.getPriceSubTotal().setText("Total a pagar: " + String.format("S/ %1$,.2f", Double.parseDouble(model.getPriceUnit())));
+                viewHolder.setImageURL(model.getImage());
+                viewHolder.getSubTotalPrice().setText("Total a pagar: " + String.format("S/ %1$,.2f", Double.parseDouble(model.getPriceUnit())));
                 viewHolder.setSubtotal(Double.parseDouble(model.getPriceUnit()));
                 // OnValueChangeListener
                 viewHolder.numberPicker.setOnValueChangedListener((NumberPicker picker, int oldVal, int newVal) -> {
                     double precioSubTotal = Double.parseDouble(model.getPriceUnit()) * newVal;
-                    viewHolder.getPriceSubTotal().setText("Total a pagar: " + String.format("S/ %1$,.2f", precioSubTotal));
+                    viewHolder.getSubTotalPrice().setText("Total a pagar: " + String.format("S/ %1$,.2f", precioSubTotal));
                     viewHolder.setSubtotal(precioSubTotal);
                     viewHolder.cbFruit.setChecked(true);
                 });
@@ -128,17 +128,17 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
-                            frutas.add(viewHolder);
-                            frutasProducto.add(model);
+                            personalFruitViewHolders.add(viewHolder);
+                            fruits.add(model);
                         } else {
-                            frutas.remove(viewHolder);
-                            frutasProducto.remove(model);
+                            personalFruitViewHolders.remove(viewHolder);
+                            fruits.remove(model);
                         }
                     }
                 });
             }
         };
-        recycler_menu.setAdapter(adapter);
+        recyclerMenu.setAdapter(adapter);
     }
 
     @Override
@@ -189,9 +189,9 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
 
     private void loadMenu(String searchText) {
         if (searchText.isEmpty()) {
-            loadFirebaseData(fruits);
+            loadFirebaseData(fruitsReference);
         } else {
-            Query fruitsFiltered = fruits.orderByChild("name").startAt(searchText).endAt(searchText + "\uf8ff");
+            Query fruitsFiltered = fruitsReference.orderByChild("name").startAt(searchText).endAt(searchText + "\uf8ff");
             loadFirebaseData(fruitsFiltered);
         }
     }

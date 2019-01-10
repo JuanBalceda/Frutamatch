@@ -11,7 +11,7 @@ public class ModeViewHolder extends RecyclerView.ViewHolder{
 
   private TextView fruitName;
   private ImageView fruitImage;
-  private String imagenURL;
+  private String imageURL;
 
   private ModeViewHolder.ClickListener mClickListener;
 
@@ -56,11 +56,11 @@ public class ModeViewHolder extends RecyclerView.ViewHolder{
     this.fruitImage = fruitImage;
   }
 
-  public String getImagenURL() {
-    return imagenURL;
+  public String getImageURL() {
+    return imageURL;
   }
 
-  public void setImagenURL(String imagenURL) {
-    this.imagenURL = imagenURL;
+  public void setImageURL(String imageURL) {
+    this.imageURL = imageURL;
   }
 }

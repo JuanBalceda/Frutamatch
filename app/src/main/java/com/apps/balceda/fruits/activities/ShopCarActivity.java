@@ -11,12 +11,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.apps.balceda.fruits.activities.hogar.HogarHomeActivity;
+import com.apps.balceda.fruits.activities.home.HomeActivity;
 import com.apps.balceda.fruits.R;
 import com.apps.balceda.fruits.adapters.ShopCarAdapter;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.wallet.AutoResolveHelper;
 import com.google.android.gms.wallet.CardInfo;
@@ -38,7 +37,7 @@ public class ShopCarActivity extends AppCompatActivity {
     RecyclerView recycler_menu;
     RecyclerView.LayoutManager layoutManager;
     ShopCarAdapter adapter;
-    Button comprar;
+    Button checkout;
 
     //Shopping Car
     static TextView subTotal, igv, total;
@@ -62,22 +61,22 @@ public class ShopCarActivity extends AppCompatActivity {
         setTitle("Carrito");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //Lista
+        // List
         recycler_menu = findViewById(R.id.recycler_shop_car);
         recycler_menu.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
-        adapter = new ShopCarAdapter(getApplicationContext(), HogarHomeActivity.pedidoFinal);
+        adapter = new ShopCarAdapter(getApplicationContext(), HomeActivity.finalOrder);
         recycler_menu.setAdapter(adapter);
 
-        subTotal = findViewById(R.id.subTotalCompra);
-        igv = findViewById(R.id.igvCompra);
-        total = findViewById(R.id.totalCompra);
+        subTotal = findViewById(R.id.subtotal_amount);
+        igv = findViewById(R.id.igv_amount);
+        total = findViewById(R.id.total);
 
-        calcular();
+        calculate();
 
-        comprar = findViewById(R.id.comprar);
-        comprar.setOnClickListener((v) -> {
+        checkout = findViewById(R.id.buy);
+        checkout.setOnClickListener((v) -> {
             Toast.makeText(getApplicationContext(), "A pagar! $_$!!!", Toast.LENGTH_LONG).show();
             isReadyToPay();
 
@@ -94,25 +93,25 @@ public class ShopCarActivity extends AppCompatActivity {
     }
 
     //Calculate Final Amount
-    public static void calcular() {
-        double subTotalCompraFinal = 0.0;
-        double igvCompraFinal = 0.0;
-        double totalCompraFinal = 0.0;
+    public static void calculate() {
+        double finalSubtotalAmount = 0.0;
+        double finalIgvAmount = 0.0;
+        double finalTotalAmount = 0.0;
 
-        if (HogarHomeActivity.pedidoFinal.size() > 0) {
-            for (int i = 0; i < HogarHomeActivity.pedidoFinal.size(); i++) {
-                subTotalCompraFinal += HogarHomeActivity.pedidoFinal.get(i).getSubTotal();
-                igvCompraFinal += HogarHomeActivity.pedidoFinal.get(i).getIgvCompra();
-                totalCompraFinal += HogarHomeActivity.pedidoFinal.get(i).getTotalCompra();
+        if (HomeActivity.finalOrder.size() > 0) {
+            for (int i = 0; i < HomeActivity.finalOrder.size(); i++) {
+                finalSubtotalAmount += HomeActivity.finalOrder.get(i).getSubTotal();
+                finalIgvAmount += HomeActivity.finalOrder.get(i).getIgvAmount();
+                finalTotalAmount += HomeActivity.finalOrder.get(i).getTotal();
             }
         } else {
-            subTotalCompraFinal = 0;
-            igvCompraFinal = 0;
-            totalCompraFinal = 0;
+            finalSubtotalAmount = 0;
+            finalIgvAmount = 0;
+            finalTotalAmount = 0;
         }
-        subTotal.setText(String.format("S/ %1$,.2f", subTotalCompraFinal));
-        igv.setText(String.format("S/  %1$,.2f", igvCompraFinal));
-        total.setText(String.format("S/  %1$,.2f", totalCompraFinal));
+        subTotal.setText(String.format("S/ %1$,.2f", finalSubtotalAmount));
+        igv.setText(String.format("S/  %1$,.2f", finalIgvAmount));
+        total.setText(String.format("S/  %1$,.2f", finalTotalAmount));
     }
 
     //Go Back to home Activity
@@ -143,6 +142,7 @@ public class ShopCarActivity extends AppCompatActivity {
                     // Hide Google as payment option.
                 }
             } catch (ApiException exception) {
+                // Handle exception
             }
 
         });

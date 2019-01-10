@@ -6,14 +6,12 @@ import android.content.SharedPreferences;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.apps.balceda.fruits.R;
-import com.apps.balceda.fruits.activities.SplashActivity;
-import com.apps.balceda.fruits.activities.personal.PersonalHomeActivity;
+import com.apps.balceda.fruits.activities.personal.PersonalActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -75,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
 
             if (user.equals(preferences.getString("usuario", "x"))) {
                 if (pass.equals(preferences.getString("contrasena", "x"))) {
-                    Intent intent = new Intent(LoginActivity.this, PersonalHomeActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, PersonalActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
@@ -151,7 +149,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         if (user != null) {
-            Intent intent = new Intent(LoginActivity.this, PersonalHomeActivity.class);
+            Intent intent = new Intent(LoginActivity.this, PersonalActivity.class);
             startActivity(intent);
             finish();
         }

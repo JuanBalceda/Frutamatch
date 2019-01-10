@@ -12,7 +12,7 @@ public class ProductViewHolder extends RecyclerView.ViewHolder {
     private TextView productName;
     private ImageView productImage;
     private String productPrice;
-    private String imagenURL;
+    private String imageURL;
 
     private ProductViewHolder.ClickListener mClickListener;
 
@@ -65,11 +65,11 @@ public class ProductViewHolder extends RecyclerView.ViewHolder {
         this.productPrice = productPrice;
     }
 
-    public String getImagenURL() {
-        return imagenURL;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setImagenURL(String imagenURL) {
-        this.imagenURL = imagenURL;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 }

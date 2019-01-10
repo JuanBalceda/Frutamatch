@@ -12,7 +12,7 @@ public class FruitViewHolder extends RecyclerView.ViewHolder{
   private TextView fruitName;
   private ImageView fruitImage;
   private String price;
-  private String imagenURL;
+  private String imageURL;
 
   private FruitViewHolder.ClickListener mClickListener;
 
@@ -65,11 +65,11 @@ public class FruitViewHolder extends RecyclerView.ViewHolder{
     this.price = price;
   }
 
-  public String getImagenURL() {
-    return imagenURL;
+  public String getImageURL() {
+    return imageURL;
   }
 
-  public void setImagenURL(String imagenURL) {
-    this.imagenURL = imagenURL;
+  public void setImageURL(String imageURL) {
+    this.imageURL = imageURL;
   }
 }

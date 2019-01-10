@@ -21,7 +21,7 @@
 
             <ImageView
                 android:scaleType="centerInside"
-                android:id="@+id/imagenFrutaShopCar"
+                android:id="@+id/image_fruit_shop_car"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_delete_black_24dp"
                 android:layout_width="50dp"
@@ -37,23 +37,23 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/frutaNombreShopCar"
+                android:id="@+id/fruit_name_shop_car"
                 android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/frutaPrecioShopCar"
+                android:id="@+id/fruit_price_shop_car"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/frutaKilosShopCar"
+                android:id="@+id/fruit_kilograms_shop_car"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/frutaSubtotalShopCar"
+                android:id="@+id/fruit_subtotal_shop_car"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

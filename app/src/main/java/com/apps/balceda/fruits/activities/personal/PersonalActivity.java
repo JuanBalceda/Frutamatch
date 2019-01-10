@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,12 +22,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
-public class PersonalHomeActivity extends AppCompatActivity {
+public class PersonalActivity extends AppCompatActivity {
 
     FirebaseDatabase database;
-    DatabaseReference products;
+    DatabaseReference productsReference;
 
-    RecyclerView recycler_menu;
+    RecyclerView recyclerMenu;
     RecyclerView.LayoutManager layoutManager;
 
     FirebaseRecyclerAdapter<Product, ProductViewHolder> adapter;
@@ -36,18 +35,18 @@ public class PersonalHomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_personal_home);
+        setContentView(R.layout.activity_personal);
 
         //iniciar Firebase
         database = FirebaseDatabase.getInstance();
-        products = database.getReference("Personal");
+        productsReference = database.getReference("Personal");
 
         //Lista
-        recycler_menu = findViewById(R.id.recycler_menu);
-        recycler_menu.setHasFixedSize(true);
+        recyclerMenu = findViewById(R.id.recycler_menu);
+        recyclerMenu.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        recycler_menu.setLayoutManager(layoutManager);
-        loadFirebaseData(products);
+        recyclerMenu.setLayoutManager(layoutManager);
+        loadFirebaseData(productsReference);
     }
 
 
@@ -60,7 +59,7 @@ public class PersonalHomeActivity extends AppCompatActivity {
                 viewHolder.getProductName().setText(model.getName());
                 viewHolder.setProductPrice(model.getPrice());
                 Picasso.with(getBaseContext()).load(model.getImage()).into(viewHolder.getProductImage());
-                viewHolder.setImagenURL(model.getImage());
+                viewHolder.setImageURL(model.getImage());
             }
 
             @NonNull
@@ -70,10 +69,10 @@ public class PersonalHomeActivity extends AppCompatActivity {
                 viewHolder.setOnClickListener(new ProductViewHolder.ClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(PersonalHomeActivity.this, PersonalFruitsActivity.class);
+                        Intent intent = new Intent(PersonalActivity.this, PersonalFruitsActivity.class);
                         intent.putExtra("productName", viewHolder.getProductName().getText());
                         intent.putExtra("productPrice", viewHolder.getProductPrice());
-                        intent.putExtra("productImg", viewHolder.getImagenURL());
+                        intent.putExtra("productImage", viewHolder.getImageURL());
                         startActivity(intent);
                     }
 
@@ -85,7 +84,7 @@ public class PersonalHomeActivity extends AppCompatActivity {
                 return viewHolder;
             }
         };
-        recycler_menu.setAdapter(adapter);
+        recyclerMenu.setAdapter(adapter);
     }
 
     /*

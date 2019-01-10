@@ -29,7 +29,7 @@
             android:name=".activities.login.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.personal.PersonalHomeActivity"
+            android:name=".activities.personal.PersonalActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.personal.PersonalFruitsActivity"

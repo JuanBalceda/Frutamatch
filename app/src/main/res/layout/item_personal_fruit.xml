@@ -22,7 +22,7 @@
 
             <ImageView
                 android:scaleType="centerInside"
-                android:id="@+id/personal_fruta_imagen"
+                android:id="@+id/personal_fruit_image"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_delete_black_24dp"
                 android:layout_width="50dp"
@@ -38,13 +38,13 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/personal_fruta_nombre"
+                android:id="@+id/personal_fruit_name"
                 android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/personal_fruta_precio"
+                android:id="@+id/personal_fruit_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -65,7 +65,7 @@
                 app:np_value="1" />
 
             <TextView
-                android:id="@+id/personal_fruta_precio_subtotal"
+                android:id="@+id/personal_fruit_price_subtotal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

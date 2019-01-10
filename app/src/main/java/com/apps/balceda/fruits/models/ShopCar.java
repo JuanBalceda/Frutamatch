@@ -3,18 +3,18 @@ package com.apps.balceda.fruits.models;
 import java.util.ArrayList;
 
 public class ShopCar {
-    private ArrayList<Fruit> pedido;
+    private ArrayList<Fruit> order;
     private Product product;
     private double subTotal;
     private final double IGV = 0.18;
-    private double igvCompra;
-    private double totalCompra;
+    private double igvAmount;
+    private double total;
 
     public ShopCar() {
-        pedido = new ArrayList<>();
+        order = new ArrayList<>();
         subTotal = 0.0;
-        igvCompra = 0.0;
-        totalCompra = 0.0;
+        igvAmount = 0.0;
+        total = 0.0;
     }
 
     public Product getProduct() {
@@ -25,12 +25,12 @@ public class ShopCar {
         this.product = product;
     }
 
-    public ArrayList<Fruit> getPedido() {
-        return pedido;
+    public ArrayList<Fruit> getOrder() {
+        return order;
     }
 
-    public void setPedido(ArrayList<Fruit> pedido) {
-        this.pedido = pedido;
+    public void setOrder(ArrayList<Fruit> order) {
+        this.order = order;
     }
 
     public double getSubTotal() {
@@ -39,19 +39,19 @@ public class ShopCar {
 
     public void setSubTotal(double subTotal) {
         this.subTotal = subTotal;
-        this.igvCompra = subTotal * IGV;
-        this.totalCompra = this.subTotal + this.igvCompra;
+        this.igvAmount = subTotal * IGV;
+        this.total = this.subTotal + this.igvAmount;
     }
 
-    public double getIgvCompra() {
-        return igvCompra;
+    public double getIgvAmount() {
+        return igvAmount;
     }
 
-    public double getTotalCompra() {
-        return totalCompra;
+    public double getTotal() {
+        return total;
     }
 
-    public void setTotalCompra(double totalCompra) {
-        this.totalCompra = totalCompra;
+    public void setTotal(double total) {
+        this.total = total;
     }
 }

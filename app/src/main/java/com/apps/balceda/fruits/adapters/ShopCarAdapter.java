@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.apps.balceda.fruits.activities.hogar.HogarHomeActivity;
+import com.apps.balceda.fruits.activities.home.HomeActivity;
 import com.apps.balceda.fruits.R;
 import com.apps.balceda.fruits.activities.ShopCarActivity;
 import com.apps.balceda.fruits.viewholders.ShopCarViewHolder;
@@ -19,12 +19,12 @@ import java.util.ArrayList;
 
 public class ShopCarAdapter extends RecyclerView.Adapter<ShopCarViewHolder> {
 
-    Context context;
-    ArrayList<ShopCar> pedidos;
+    private Context context;
+    private ArrayList<ShopCar> orders;
 
-    public ShopCarAdapter(Context context, ArrayList<ShopCar> pedidos) {
+    public ShopCarAdapter(Context context, ArrayList<ShopCar> orders) {
         this.context = context;
-        this.pedidos = pedidos;
+        this.orders = orders;
     }
 
     @NonNull
@@ -32,48 +32,46 @@ public class ShopCarAdapter extends RecyclerView.Adapter<ShopCarViewHolder> {
     public ShopCarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_shop_car, parent, false);
-
-        ShopCarViewHolder shopCarViewHolder = new ShopCarViewHolder(view);
-        return shopCarViewHolder;
+        return new ShopCarViewHolder(view);
     }
 
     @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull ShopCarViewHolder holder, int position) {
 
-        if (pedidos.get(position).getProduct() == null){
-            holder.nombreFruta.setText(pedidos.get(position).getPedido().get(0).getName());
+        if (orders.get(position).getProduct() == null) {
+            holder.fruitName.setText(orders.get(position).getOrder().get(0).getName());
 
-            double precioUnitario = Double.parseDouble(pedidos.get(position).getPedido().get(0).getPrice());
-            String precioKilo = String.format("S/ %1$,.2f", precioUnitario);
-            holder.precioFruta.setText("Precio por kilo: " + precioKilo);
+            double unitPrice = Double.parseDouble(orders.get(position).getOrder().get(0).getPrice());
+            String pricePerKilogram = String.format("S/ %1$,.2f", unitPrice);
+            holder.fruitPrice.setText("Precio por kilo: " + pricePerKilogram);
 
-            double cantidad = pedidos.get(position).getSubTotal() / Double.parseDouble(pedidos.get(position).getPedido().get(0).getPrice());
-            holder.kilos.setText("Kilos solicitados: " + String.format("%1$,.0f", cantidad));
-            holder.subtotal.setText("Cargo: " + String.format("S/ %1$,.2f", pedidos.get(position).getSubTotal()));
-            Picasso.with(context).load(pedidos.get(position).getPedido().get(0).getImage()).into(holder.imagenFruta);
+            double productAmount = orders.get(position).getSubTotal() / Double.parseDouble(orders.get(position).getOrder().get(0).getPrice());
+            holder.kilograms.setText("Kilos solicitados: " + String.format("%1$,.0f", productAmount));
+            holder.subtotal.setText("Cargo: " + String.format("S/ %1$,.2f", orders.get(position).getSubTotal()));
+            Picasso.with(context).load(orders.get(position).getOrder().get(0).getImage()).into(holder.FruitImage);
 
             holder.trash.setOnClickListener((v) -> {
-                pedidos.remove(position);
+                orders.remove(position);
                 notifyDataSetChanged();
-                ShopCarActivity.calcular();
+                ShopCarActivity.calculate();
             });
-        }else{
-            holder.nombreFruta.setText(pedidos.get(position).getProduct().getName());
+        } else {
+            holder.fruitName.setText(orders.get(position).getProduct().getName());
 
-            double precioUnitario = Double.parseDouble(pedidos.get(position).getProduct().getPrice());
-            String precioKilo = String.format("S/ %1$,.2f", precioUnitario);
-            holder.precioFruta.setText("Precio unitario: " + precioKilo);
+            double unitPrice = Double.parseDouble(orders.get(position).getProduct().getPrice());
+            String pricePerKilogram = String.format("S/ %1$,.2f", unitPrice);
+            holder.fruitPrice.setText("Precio unitario: " + pricePerKilogram);
 
-            double cantidad = pedidos.get(position).getSubTotal() / Double.parseDouble(pedidos.get(position).getProduct().getPrice());
-            holder.kilos.setText("Unidades solicitadas: " + String.format("%1$,.0f", cantidad));
-            holder.subtotal.setText("Cargo: " + String.format("S/ %1$,.2f", pedidos.get(position).getSubTotal()));
-            Picasso.with(context).load(pedidos.get(position).getProduct().getImage()).into(holder.imagenFruta);
+            double productAmount = orders.get(position).getSubTotal() / Double.parseDouble(orders.get(position).getProduct().getPrice());
+            holder.kilograms.setText("Unidades solicitadas: " + String.format("%1$,.0f", productAmount));
+            holder.subtotal.setText("Cargo: " + String.format("S/ %1$,.2f", orders.get(position).getSubTotal()));
+            Picasso.with(context).load(orders.get(position).getProduct().getImage()).into(holder.FruitImage);
 
             holder.trash.setOnClickListener((v) -> {
-                pedidos.remove(position);
+                orders.remove(position);
                 notifyDataSetChanged();
-                ShopCarActivity.calcular();
+                ShopCarActivity.calculate();
             });
         }
 
@@ -82,6 +80,22 @@ public class ShopCarAdapter extends RecyclerView.Adapter<ShopCarViewHolder> {
 
     @Override
     public int getItemCount() {
-        return HogarHomeActivity.pedidoFinal.size();
+        return HomeActivity.finalOrder.size();
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public ArrayList<ShopCar> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(ArrayList<ShopCar> orders) {
+        this.orders = orders;
     }
 }

@@ -1,4 +1,4 @@
-package com.apps.balceda.fruits.activities.hogar;
+package com.apps.balceda.fruits.activities.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,14 +25,14 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class HogarHomeActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class HomeActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
-    public static ArrayList<ShopCar> pedidoFinal = new ArrayList<>();
+    public static ArrayList<ShopCar> finalOrder = new ArrayList<>();
 
     FirebaseDatabase database;
-    DatabaseReference fruits;
+    DatabaseReference fruitsReference;
 
-    RecyclerView recycler_menu;
+    RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
 
     FirebaseRecyclerAdapter<Fruit, FruitViewHolder> adapter;
@@ -40,7 +40,7 @@ public class HogarHomeActivity extends AppCompatActivity implements SearchView.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_hogar_home);
+        setContentView(R.layout.activity_home);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -48,14 +48,14 @@ public class HogarHomeActivity extends AppCompatActivity implements SearchView.O
 
         //iniciar Firebase
         database = FirebaseDatabase.getInstance();
-        fruits = database.getReference("Fruits");
+        fruitsReference = database.getReference("Fruits");
 
         //Lista
-        recycler_menu = findViewById(R.id.recycler_menu);
-        recycler_menu.setHasFixedSize(true);
+        recyclerView = findViewById(R.id.recycler_menu);
+        recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        recycler_menu.setLayoutManager(layoutManager);
-        loadFirebaseData(fruits);
+        recyclerView.setLayoutManager(layoutManager);
+        loadFirebaseData(fruitsReference);
     }
 
     private void loadFirebaseData(Query databaseReference) {
@@ -67,7 +67,7 @@ public class HogarHomeActivity extends AppCompatActivity implements SearchView.O
                 viewHolder.setPrice(model.getPrice());
                 viewHolder.getFruitName().setText(model.getName());
                 Picasso.with(getBaseContext()).load(model.getImage()).into(viewHolder.getFruitImage());
-                viewHolder.setImagenURL(model.getImage());
+                viewHolder.setImageURL(model.getImage());
             }
 
             @Override
@@ -76,10 +76,10 @@ public class HogarHomeActivity extends AppCompatActivity implements SearchView.O
                 viewHolder.setOnClickListener(new FruitViewHolder.ClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(HogarHomeActivity.this, FruitDetailsActivity.class);
+                        Intent intent = new Intent(HomeActivity.this, FruitDetailsActivity.class);
                         intent.putExtra("frutaName", viewHolder.getFruitName().getText());
-                        intent.putExtra("precio", viewHolder.getPrice());
-                        intent.putExtra("imagen", viewHolder.getImagenURL());
+                        intent.putExtra("price", viewHolder.getPrice());
+                        intent.putExtra("image", viewHolder.getImageURL());
                         startActivity(intent);
                     }
 
@@ -90,7 +90,7 @@ public class HogarHomeActivity extends AppCompatActivity implements SearchView.O
                 return viewHolder;
             }
         };
-        recycler_menu.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -141,9 +141,9 @@ public class HogarHomeActivity extends AppCompatActivity implements SearchView.O
 
     private void loadMenu(String searchText) {
         if (searchText.isEmpty()) {
-            loadFirebaseData(fruits);
+            loadFirebaseData(fruitsReference);
         } else {
-            Query fruitsFiltered = fruits.orderByChild("name").startAt(searchText).endAt(searchText + "\uf8ff");
+            Query fruitsFiltered = fruitsReference.orderByChild("name").startAt(searchText).endAt(searchText + "\uf8ff");
             loadFirebaseData(fruitsFiltered);
         }
     }

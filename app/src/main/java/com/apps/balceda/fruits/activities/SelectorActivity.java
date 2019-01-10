@@ -12,8 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.apps.balceda.fruits.activities.hogar.HogarHomeActivity;
-import com.apps.balceda.fruits.activities.personal.PersonalHomeActivity;
+import com.apps.balceda.fruits.activities.home.HomeActivity;
+import com.apps.balceda.fruits.activities.personal.PersonalActivity;
 import com.apps.balceda.fruits.R;
 import com.apps.balceda.fruits.viewholders.ModeViewHolder;
 import com.apps.balceda.fruits.models.Mode;
@@ -22,7 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
-public class HomeSelectorActivity extends AppCompatActivity {
+public class SelectorActivity extends AppCompatActivity {
 
     FirebaseDatabase database;
     DatabaseReference modes;
@@ -33,7 +33,7 @@ public class HomeSelectorActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_selector);
+        setContentView(R.layout.activity_selector);
 
         //iniciar Firebase
         database = FirebaseDatabase.getInstance();
@@ -62,7 +62,7 @@ public class HomeSelectorActivity extends AppCompatActivity {
                         Picasso.with(getBaseContext())
                                 .load(model.getImage())
                                 .into(viewHolder.getFruitImage());
-                        viewHolder.setImagenURL(model.getImage());
+                        viewHolder.setImageURL(model.getImage());
                     }
 
                     @NonNull
@@ -77,8 +77,8 @@ public class HomeSelectorActivity extends AppCompatActivity {
                                 switch (position) {
                                     case 0:
                                         intent = new Intent(
-                                                HomeSelectorActivity.this,
-                                                PersonalHomeActivity.class);
+                                                SelectorActivity.this,
+                                                PersonalActivity.class);
                                         startActivity(intent);
                                         //Toast.makeText(getApplicationContext(),
                                         // viewHolder.getFruitName().getText(),
@@ -86,8 +86,8 @@ public class HomeSelectorActivity extends AppCompatActivity {
                                         break;
                                     case 1:
                                         intent = new Intent(
-                                                HomeSelectorActivity.this,
-                                                HogarHomeActivity.class);
+                                                SelectorActivity.this,
+                                                HomeActivity.class);
                                         startActivity(intent);
                                         break;
                                     case 2:

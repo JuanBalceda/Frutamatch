@@ -13,8 +13,8 @@ public class PersonalFruitViewHolder extends RecyclerView.ViewHolder {
 
     private TextView fruitName;
     private ImageView fruitImage;
-    private TextView priceUnit, priceSubTotal;
-    private String imagenURL;
+    private TextView unitPrice, subTotalPrice;
+    private String imageURL;
     private double subtotal;
     public CheckBox cbFruit;
     public NumberPicker numberPicker;
@@ -22,10 +22,10 @@ public class PersonalFruitViewHolder extends RecyclerView.ViewHolder {
     public PersonalFruitViewHolder(View itemView) {
         super(itemView);
 
-        fruitImage = itemView.findViewById(R.id.personal_fruta_imagen);
-        fruitName = itemView.findViewById(R.id.personal_fruta_nombre);
-        priceUnit = itemView.findViewById(R.id.personal_fruta_precio);
-        priceSubTotal = itemView.findViewById(R.id.personal_fruta_precio_subtotal);
+        fruitImage = itemView.findViewById(R.id.personal_fruit_image);
+        fruitName = itemView.findViewById(R.id.personal_fruit_name);
+        unitPrice = itemView.findViewById(R.id.personal_fruit_price);
+        subTotalPrice = itemView.findViewById(R.id.personal_fruit_price_subtotal);
         cbFruit = itemView.findViewById(R.id.checkBox);
         numberPicker = itemView.findViewById(R.id.personal_number_picker);
     }
@@ -38,12 +38,12 @@ public class PersonalFruitViewHolder extends RecyclerView.ViewHolder {
         this.subtotal = subtotal;
     }
 
-    public TextView getPriceSubTotal() {
-        return priceSubTotal;
+    public TextView getSubTotalPrice() {
+        return subTotalPrice;
     }
 
-    public void setPriceSubTotal(TextView priceSubTotal) {
-        this.priceSubTotal = priceSubTotal;
+    public void setSubTotalPrice(TextView subTotalPrice) {
+        this.subTotalPrice = subTotalPrice;
     }
 
     public TextView getFruitName() {
@@ -62,19 +62,19 @@ public class PersonalFruitViewHolder extends RecyclerView.ViewHolder {
         this.fruitImage = fruitImage;
     }
 
-    public TextView getPriceUnit() {
-        return priceUnit;
+    public TextView getUnitPrice() {
+        return unitPrice;
     }
 
-    public void setPriceUnit(TextView priceUnit) {
-        this.priceUnit = priceUnit;
+    public void setUnitPrice(TextView unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
-    public String getImagenURL() {
-        return imagenURL;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setImagenURL(String imagenURL) {
-        this.imagenURL = imagenURL;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 }
