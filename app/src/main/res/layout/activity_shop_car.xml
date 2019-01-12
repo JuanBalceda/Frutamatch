@@ -116,12 +116,14 @@
 
             <Button
                 android:id="@+id/buy"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="8dp"
+                android:layout_margin="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/ic_google_pay_mark" />
+                android:background="@drawable/boton_comprar"
+                android:text="Pagar"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
 
         </LinearLayout>
 

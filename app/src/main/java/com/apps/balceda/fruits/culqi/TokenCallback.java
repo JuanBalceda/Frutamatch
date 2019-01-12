@@ -2,14 +2,10 @@ package com.apps.balceda.fruits.culqi;
 
 import org.json.JSONObject;
 
-/**
- * Created by culqi on 2/7/17.
- */
-
 public interface TokenCallback {
 
-    public void onSuccess(JSONObject token);
+    void onSuccess(JSONObject token);
 
-    public void onError(Exception error);
+    void onError(Exception error);
 
 }

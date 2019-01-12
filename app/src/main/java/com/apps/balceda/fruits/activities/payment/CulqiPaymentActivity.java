@@ -6,9 +6,10 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.view.View;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.apps.balceda.fruits.R;
 import com.apps.balceda.fruits.culqi.Card;
@@ -18,13 +19,15 @@ import com.apps.balceda.fruits.validation.Validation;
 
 import org.json.JSONObject;
 
+import static com.apps.balceda.fruits.activities.login.LoginActivity.mAuth;
+
 public class CulqiPaymentActivity extends AppCompatActivity {
 
     Validation validation;
 
     ProgressDialog progress;
 
-    TextView txtcardnumber, txtcvv, txtmonth, txtyear, txtemail, kind_card, result;
+    TextView txt_cardnumber, txt_cvv, txt_month, txt_year, txt_email, kind_card, result;
     Button btnPay;
 
     @Override
@@ -35,29 +38,22 @@ public class CulqiPaymentActivity extends AppCompatActivity {
         validation = new Validation();
 
         progress = new ProgressDialog(this);
-        progress.setMessage("Validando informacion de la tarjeta");
+        progress.setMessage(getString(R.string.validation_message));
         progress.setCancelable(false);
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
-        txtcardnumber = (TextView) findViewById(R.id.txt_cardnumber);
+        txt_cardnumber = findViewById(R.id.txt_cardnumber);
+        txt_cvv = findViewById(R.id.txt_cvv);
+        txt_month = findViewById(R.id.txt_month);
+        txt_year = findViewById(R.id.txt_year);
+        txt_email = findViewById(R.id.txt_email);
+        kind_card = findViewById(R.id.kind_card);
+        result = findViewById(R.id.token_id);
+        btnPay = findViewById(R.id.btn_pay);
 
-        txtcvv = (TextView) findViewById(R.id.txt_cvv);
+        txt_cvv.setEnabled(false);
 
-        txtmonth = (TextView) findViewById(R.id.txt_month);
-
-        txtyear = (TextView) findViewById(R.id.txt_year);
-
-        txtemail = (TextView) findViewById(R.id.txt_email);
-
-        kind_card = (TextView) findViewById(R.id.kind_card);
-
-        result = (TextView) findViewById(R.id.token_id);
-
-        btnPay = (Button) findViewById(R.id.btn_pay);
-
-        txtcvv.setEnabled(false);
-
-        txtcardnumber.addTextChangedListener(new TextWatcher() {
+        txt_cardnumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -65,36 +61,36 @@ public class CulqiPaymentActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() == 0) {
-                    txtcvv.setEnabled(true);
+                    txt_cvv.setEnabled(true);
                 }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                String text = txtcardnumber.getText().toString();
+                String text = txt_cardnumber.getText().toString();
                 // Validations go here
                 if (s.length() == 0) {
-                    // txtcardnumber.setBackgroundResource(R.drawable.border_error);
+                    // txt_cardnumber.setBackgroundResource(R.drawable.border_error);
                 }
 
                 if (validation.luhn(text)) {
-                    // txtcardnumber.setBackgroundResource(R.drawable.border_sucess);
+                    // txt_cardnumber.setBackgroundResource(R.drawable.border_sucess);
                 } else {
-                    // txtcardnumber.setBackgroundResource(R.drawable.border_error);
+                    // txt_cardnumber.setBackgroundResource(R.drawable.border_error);
                 }
 
                 int cvv = validation.bin(text, kind_card);
                 if (cvv > 0) {
-                    txtcvv.setFilters(new InputFilter[]{new InputFilter.LengthFilter(cvv)});
-                    txtcvv.setEnabled(true);
+                    txt_cvv.setFilters(new InputFilter[]{new InputFilter.LengthFilter(cvv)});
+                    txt_cvv.setEnabled(true);
                 } else {
-                    txtcvv.setEnabled(false);
-                    txtcvv.setText("");
+                    txt_cvv.setEnabled(false);
+                    txt_cvv.setText("");
                 }
             }
         });
 
-        txtyear.addTextChangedListener(new TextWatcher() {
+        txt_year.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -105,17 +101,17 @@ public class CulqiPaymentActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String text = txtyear.getText().toString();
+                String text = txt_year.getText().toString();
                 // Validation goes here
                 if (validation.year(text)) {
-                    // txtyear.setBackgroundResource(R.drawable.border_error);
+                    // txt_year.setBackgroundResource(R.drawable.border_error);
                 } else {
-                    // txtyear.setBackgroundResource(R.drawable.border_sucess);
+                    // txt_year.setBackgroundResource(R.drawable.border_sucess);
                 }
             }
         });
 
-        txtmonth.addTextChangedListener(new TextWatcher() {
+        txt_month.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -126,44 +122,50 @@ public class CulqiPaymentActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String text = txtmonth.getText().toString();
+                String text = txt_month.getText().toString();
                 // Validation goes here
 
                 if (validation.month(text)) {
-                    // txtmonth.setBackgroundResource(R.drawable.border_error);
+                    // txt_month.setBackgroundResource(R.drawable.border_error);
                 } else {
-                    // txtmonth.setBackgroundResource(R.drawable.border_sucess);
+                    // txt_month.setBackgroundResource(R.drawable.border_sucess);
                 }
             }
         });
 
-        btnPay.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                progress.show();
+        txt_email.setText(mAuth.getCurrentUser().getEmail());
+        btnPay.setOnClickListener(view -> {
+            progress.show();
+            Card card = new Card(txt_cardnumber.getText().toString(),
+                    txt_cvv.getText().toString(),
+                    Integer.valueOf(txt_month.getText().toString()),
+                    Integer.valueOf(txt_year.getText().toString()),
+                    txt_email.getText().toString());
 
-                Card card = new Card(txtcardnumber.getText().toString(), txtcvv.getText().toString(), 9, 2020, txtemail.getText().toString());
+            Token token = new Token("pk_test_vzMuTHoueOMlgUPj");
 
-                Token token = new Token("pk_test_vzMuTHoueOMlgUPj");
-
-                token.createToken(getApplicationContext(), card, new TokenCallback() {
-                    @Override
-                    public void onSuccess(JSONObject token) {
-                        try {
-                            result.setText(token.get("id").toString());
-                        } catch (Exception ex) {
-                            progress.hide();
-                        }
+            token.createToken(getApplicationContext(), card, new TokenCallback() {
+                @Override
+                public void onSuccess(JSONObject token) {
+                    try {
+                        result.setText(token.get("id").toString());
+                        Log.println(Log.INFO, "", token.get("id").toString());
+                    } catch (Exception ex) {
+                        Log.println(Log.ERROR, "", ex.getMessage());
+                        Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
                         progress.hide();
                     }
+                    progress.hide();
+                    Toast.makeText(getApplicationContext(), "Pago realizado correctamente", Toast.LENGTH_LONG).show();
+                }
 
-                    @Override
-                    public void onError(Exception error) {
-                        progress.hide();
-                    }
-                });
+                @Override
+                public void onError(Exception error) {
+                    Log.println(Log.ERROR, "", error.getMessage());
+                    progress.hide();
+                }
+            });
 
-            }
         });
-
     }
 }
