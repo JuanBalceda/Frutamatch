@@ -9,6 +9,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Toast;
@@ -54,7 +55,7 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Seleccione sus personalFruitViewHolders");
+        toolbar.setTitle("Seleccione sus Frutas");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         productName = getIntent().getExtras().getString("productName");
@@ -118,13 +119,21 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
                 viewHolder.setImageURL(model.getImage());
                 viewHolder.getSubTotalPrice().setText("Total a pagar: " + String.format("S/ %1$,.2f", pricePerProduct));
                 viewHolder.setSubtotal(pricePerProduct);
-                // OnValueChangeListener
-                viewHolder.numberPicker.setOnValueChangedListener((NumberPicker picker, int oldVal, int newVal) -> {
-                    double precioSubTotal = pricePerProduct * newVal;
-                    viewHolder.getSubTotalPrice().setText("Total a pagar: " + String.format("S/ %1$,.2f", precioSubTotal));
-                    viewHolder.setSubtotal(precioSubTotal);
-                    viewHolder.cbFruit.setChecked(true);
-                });
+
+                if (productName.equalsIgnoreCase("Jugos") || productName.equalsIgnoreCase("Ensaladas") || productName.equalsIgnoreCase("Aguas")) {
+                    viewHolder.getSubTotalPrice().setVisibility(View.GONE);
+                    viewHolder.numberPicker.setVisibility(View.GONE);
+                }else{
+                    // OnValueChangeListener
+                    viewHolder.numberPicker.setOnValueChangedListener((NumberPicker picker, int oldVal, int newVal) -> {
+                        double precioSubTotal = pricePerProduct * newVal;
+                        viewHolder.getSubTotalPrice().setText("Total a pagar: " + String.format("S/ %1$,.2f", precioSubTotal));
+                        viewHolder.setSubtotal(precioSubTotal);
+                        viewHolder.cbFruit.setChecked(true);
+                    });
+                }
+
+
                 viewHolder.cbFruit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
