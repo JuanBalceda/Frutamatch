@@ -64,7 +64,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
         productName.setText(product);
         description.setText("Frutas: " + detail);
 
-        unitPrice = productPrice + additional;
+        // unitPrice = productPrice + additional;
+        unitPrice = additional;
         priceTextView.setText("Precio: " + String.format("S/ %1$,.2f", unitPrice));
 
         subtotalPrice = unitPrice;
