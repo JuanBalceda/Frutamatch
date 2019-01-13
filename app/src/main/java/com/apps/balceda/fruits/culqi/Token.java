@@ -31,7 +31,7 @@ public class Token {
 
     private TokenCallback listener;
 
-    public Token(String api_key){
+    public Token(String api_key) {
         this.api_key = api_key;
         this.listener = null;
     }
@@ -50,25 +50,17 @@ public class Token {
             jsonBody.put("expiration_month", card.getExpiration_month());
             jsonBody.put("expiration_year", card.getExpiration_year());
             jsonBody.put("email", card.getEmail());
-        } catch (Exception ex){
-            Log.v("", "ERROR: "+ex.getMessage());
+        } catch (Exception ex) {
+            Log.v("", "ERROR: " + ex.getMessage());
         }
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, config.url_base+URL,jsonBody, new Response.Listener<JSONObject>(){
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    listener.onSuccess(response);
-                } catch (Exception ex){
-                    listener.onError(ex);
-                }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, config.url_base + URL, jsonBody, response -> {
+            try {
+                listener.onSuccess(response);
+            } catch (Exception ex) {
+                listener.onError(ex);
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                listener.onError(error);
-            }
-        }) {
+        }, error -> listener.onError(error)) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();

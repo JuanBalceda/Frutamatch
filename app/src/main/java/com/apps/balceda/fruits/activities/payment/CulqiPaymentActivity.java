@@ -142,16 +142,14 @@ public class CulqiPaymentActivity extends AppCompatActivity {
                     Integer.valueOf(txt_year.getText().toString()),
                     txt_email.getText().toString());
 
-            Token token = new Token("pk_test_vzMuTHoueOMlgUPj");
+            Token token = new Token("pk_live_mvyKlzMh8dVEuRLw");
 
             token.createToken(getApplicationContext(), card, new TokenCallback() {
                 @Override
                 public void onSuccess(JSONObject token) {
                     try {
                         result.setText(token.get("id").toString());
-                        Log.println(Log.INFO, "", token.get("id").toString());
                     } catch (Exception ex) {
-                        Log.println(Log.ERROR, "", ex.getMessage());
                         Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
                         progress.hide();
                     }
@@ -161,7 +159,7 @@ public class CulqiPaymentActivity extends AppCompatActivity {
 
                 @Override
                 public void onError(Exception error) {
-                    Log.println(Log.ERROR, "", error.getMessage());
+                    Toast.makeText(getApplicationContext(), "Error: "+ error, Toast.LENGTH_LONG).show();
                     progress.hide();
                 }
             });
