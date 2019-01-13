@@ -101,7 +101,7 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
             intent.putExtra("fruits", fruits);
             startActivity(intent);
         } else {
-            Toast.makeText(getApplicationContext(), "Seleccione las personalFruitViewHolders", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Debe seleccionar al menos una fruta para continuar.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -111,15 +111,16 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
                 PersonalFruitViewHolder.class, databaseReference) {
             @Override
             protected void populateViewHolder(final PersonalFruitViewHolder viewHolder, final Fruit model, int position) {
-                viewHolder.getUnitPrice().setText("S/ " + model.getPriceUnit());
+                double pricePerProduct = Double.parseDouble(model.getPriceUnit()) * Double.parseDouble(productPrice);
+                viewHolder.getUnitPrice().setText(String.format("S/ %1$,.2f", pricePerProduct));
                 viewHolder.getFruitName().setText(model.getName());
                 Picasso.with(getBaseContext()).load(model.getImage()).into(viewHolder.getFruitImage());
                 viewHolder.setImageURL(model.getImage());
-                viewHolder.getSubTotalPrice().setText("Total a pagar: " + String.format("S/ %1$,.2f", Double.parseDouble(model.getPriceUnit())));
-                viewHolder.setSubtotal(Double.parseDouble(model.getPriceUnit()));
+                viewHolder.getSubTotalPrice().setText("Total a pagar: " + String.format("S/ %1$,.2f", pricePerProduct));
+                viewHolder.setSubtotal(pricePerProduct);
                 // OnValueChangeListener
                 viewHolder.numberPicker.setOnValueChangedListener((NumberPicker picker, int oldVal, int newVal) -> {
-                    double precioSubTotal = Double.parseDouble(model.getPriceUnit()) * newVal;
+                    double precioSubTotal = pricePerProduct * newVal;
                     viewHolder.getSubTotalPrice().setText("Total a pagar: " + String.format("S/ %1$,.2f", precioSubTotal));
                     viewHolder.setSubtotal(precioSubTotal);
                     viewHolder.cbFruit.setChecked(true);
