@@ -7,10 +7,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.apps.balceda.fruits.R;
@@ -46,6 +47,7 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
 
     ArrayList<PersonalFruitViewHolder> personalFruitViewHolders;
     ArrayList<Fruit> fruits;
+    SparseBooleanArray fruitStates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +56,7 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Seleccione sus personalFruitViewHolders");
+        toolbar.setTitle("Seleccione sus Frutas");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         productName = getIntent().getExtras().getString("productName");
@@ -63,6 +65,7 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
 
         personalFruitViewHolders = new ArrayList<>();
         fruits = new ArrayList<>();
+        fruitStates = new SparseBooleanArray();
 
         //iniciar Firebase
         database = FirebaseDatabase.getInstance();
@@ -100,6 +103,7 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
             intent.putExtra("detail", detail);
             intent.putExtra("fruits", fruits);
             startActivity(intent);
+            finish();
         } else {
             Toast.makeText(getApplicationContext(), "Debe seleccionar al menos una fruta para continuar.", Toast.LENGTH_SHORT).show();
         }
@@ -111,6 +115,12 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
                 PersonalFruitViewHolder.class, databaseReference) {
             @Override
             protected void populateViewHolder(final PersonalFruitViewHolder viewHolder, final Fruit model, int position) {
+                boolean currentState = fruitStates.get(position, false);
+                if (currentState) {
+                    viewHolder.cbFruit.setChecked(true);
+                } else {
+                    viewHolder.cbFruit.setChecked(false);
+                }
                 double pricePerProduct = Double.parseDouble(model.getPriceUnit()) * Double.parseDouble(productPrice);
                 viewHolder.getUnitPrice().setText(String.format("S/ %1$,.2f", pricePerProduct));
                 viewHolder.getFruitName().setText(model.getName());
@@ -118,23 +128,31 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
                 viewHolder.setImageURL(model.getImage());
                 viewHolder.getSubTotalPrice().setText("Total a pagar: " + String.format("S/ %1$,.2f", pricePerProduct));
                 viewHolder.setSubtotal(pricePerProduct);
-                // OnValueChangeListener
-                viewHolder.numberPicker.setOnValueChangedListener((NumberPicker picker, int oldVal, int newVal) -> {
-                    double precioSubTotal = pricePerProduct * newVal;
-                    viewHolder.getSubTotalPrice().setText("Total a pagar: " + String.format("S/ %1$,.2f", precioSubTotal));
-                    viewHolder.setSubtotal(precioSubTotal);
-                    viewHolder.cbFruit.setChecked(true);
-                });
-                viewHolder.cbFruit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (isChecked) {
-                            personalFruitViewHolders.add(viewHolder);
-                            fruits.add(model);
-                        } else {
-                            personalFruitViewHolders.remove(viewHolder);
-                            fruits.remove(model);
-                        }
+
+                if (productName.equalsIgnoreCase("Jugos") || productName.equalsIgnoreCase("Ensaladas") || productName.equalsIgnoreCase("Aguas")) {
+                    viewHolder.getSubTotalPrice().setVisibility(View.GONE);
+                    viewHolder.numberPicker.setVisibility(View.GONE);
+                } else {
+                    // OnValueChangeListener
+                    viewHolder.numberPicker.setOnValueChangedListener((NumberPicker picker, int oldVal, int newVal) -> {
+                        double precioSubTotal = pricePerProduct * newVal;
+                        viewHolder.getSubTotalPrice().setText("Total a pagar: " + String.format("S/ %1$,.2f", precioSubTotal));
+                        viewHolder.setSubtotal(precioSubTotal);
+                        // viewHolder.cbFruit.setChecked(true);
+                    });
+                }
+
+                viewHolder.cbFruit.setOnClickListener(v -> {
+                    if (viewHolder.cbFruit.isChecked()) {
+                        viewHolder.cbFruit.setChecked(true);
+                        fruitStates.append(position, true);
+                        personalFruitViewHolders.add(viewHolder);
+                        fruits.add(model);
+                    } else {
+                        viewHolder.cbFruit.setChecked(false);
+                        fruitStates.append(position, false);
+                        personalFruitViewHolders.remove(viewHolder);
+                        fruits.remove(model);
                     }
                 });
             }
