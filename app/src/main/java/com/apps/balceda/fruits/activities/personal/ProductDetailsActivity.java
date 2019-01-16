@@ -92,6 +92,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
             HomeActivity.finalOrder.add(newShopCar);
             Intent intent = new Intent(this, ShopCarActivity.class);
             startActivity(intent);
+            finish();
         });
     }
 
