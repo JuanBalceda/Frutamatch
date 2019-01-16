@@ -80,9 +80,6 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
 
         button = findViewById(R.id.personal_toShop);
         button.setOnClickListener((v) -> {
-            for (int i = 0; i > fruitStates.size(); i++) {
-                fruitStates.get(i);
-            }
             calcular();
         });
     }
