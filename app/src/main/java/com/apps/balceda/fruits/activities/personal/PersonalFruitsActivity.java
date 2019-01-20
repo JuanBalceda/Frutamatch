@@ -7,10 +7,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.apps.balceda.fruits.R;
@@ -32,7 +33,7 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
     String productPrice;
     String productImg;
     double additional;
-    String detail;
+    StringBuilder detail;
 
     FirebaseDatabase database;
     DatabaseReference fruitsReference;
@@ -44,7 +45,8 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
 
     Button button;
 
-    ArrayList<PersonalFruitViewHolder> personalFruitViewHolders;
+    // Selected fruits in a product
+    SparseBooleanArray fruitStates;
     ArrayList<Fruit> fruits;
 
     @Override
@@ -54,15 +56,15 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Seleccione sus personalFruitViewHolders");
+        toolbar.setTitle("Seleccione sus Frutas");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         productName = getIntent().getExtras().getString("productName");
         productPrice = getIntent().getExtras().getString("productPrice");
         productImg = getIntent().getExtras().getString("productImage");
 
-        personalFruitViewHolders = new ArrayList<>();
         fruits = new ArrayList<>();
+        fruitStates = new SparseBooleanArray();
 
         //iniciar Firebase
         database = FirebaseDatabase.getInstance();
@@ -82,14 +84,16 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
     }
 
     private void calcular() {
-        if (personalFruitViewHolders.size() > 0) {
-            detail = "";
-            for (int i = 0; i < personalFruitViewHolders.size(); i++) {
-                additional += personalFruitViewHolders.get(i).getSubtotal();
-                if ((i + 1) == personalFruitViewHolders.size()) {
-                    detail += personalFruitViewHolders.get(i).getFruitName().getText().toString() + ".";
+        if (fruits.size() > 0) {
+            detail = new StringBuilder();
+            for (int i = 0; i < fruits.size(); i++) {
+                additional += (Double.parseDouble(fruits.get(i).getPriceUnit()) * Double.parseDouble(productPrice));
+                if ((i + 1) == fruits.size()) {
+                    detail.append(fruits.get(i).getName());
+                    detail.append(".");
                 } else {
-                    detail += personalFruitViewHolders.get(i).getFruitName().getText().toString() + ", ";
+                    detail.append(fruits.get(i).getName());
+                    detail.append(", ");
                 }
             }
             Intent intent = new Intent(PersonalFruitsActivity.this, ProductDetailsActivity.class);
@@ -97,11 +101,12 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
             intent.putExtra("productPrice", productPrice);
             intent.putExtra("productImage", productImg);
             intent.putExtra("additional", additional);
-            intent.putExtra("detail", detail);
+            intent.putExtra("detail", detail.toString());
             intent.putExtra("fruits", fruits);
             startActivity(intent);
+            finish();
         } else {
-            Toast.makeText(getApplicationContext(), "Seleccione las personalFruitViewHolders", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Debe seleccionar al menos una fruta para continuar.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -111,29 +116,44 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
                 PersonalFruitViewHolder.class, databaseReference) {
             @Override
             protected void populateViewHolder(final PersonalFruitViewHolder viewHolder, final Fruit model, int position) {
-                viewHolder.getUnitPrice().setText("S/ " + model.getPriceUnit());
+                boolean currentState = fruitStates.get(position, false);
+                if (currentState) {
+                    viewHolder.cbFruit.setChecked(true);
+                } else {
+                    viewHolder.cbFruit.setChecked(false);
+                }
+                double pricePerProduct = Double.parseDouble(model.getPriceUnit()) * Double.parseDouble(productPrice);
+                viewHolder.getUnitPrice().setText(String.format("S/ %1$,.2f", pricePerProduct));
                 viewHolder.getFruitName().setText(model.getName());
                 Picasso.with(getBaseContext()).load(model.getImage()).into(viewHolder.getFruitImage());
                 viewHolder.setImageURL(model.getImage());
-                viewHolder.getSubTotalPrice().setText("Total a pagar: " + String.format("S/ %1$,.2f", Double.parseDouble(model.getPriceUnit())));
-                viewHolder.setSubtotal(Double.parseDouble(model.getPriceUnit()));
-                // OnValueChangeListener
-                viewHolder.numberPicker.setOnValueChangedListener((NumberPicker picker, int oldVal, int newVal) -> {
-                    double precioSubTotal = Double.parseDouble(model.getPriceUnit()) * newVal;
-                    viewHolder.getSubTotalPrice().setText("Total a pagar: " + String.format("S/ %1$,.2f", precioSubTotal));
-                    viewHolder.setSubtotal(precioSubTotal);
-                    viewHolder.cbFruit.setChecked(true);
-                });
-                viewHolder.cbFruit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (isChecked) {
-                            personalFruitViewHolders.add(viewHolder);
-                            fruits.add(model);
-                        } else {
-                            personalFruitViewHolders.remove(viewHolder);
-                            fruits.remove(model);
-                        }
+                viewHolder.getSubTotalPrice().setText("Total a pagar: " + String.format("S/ %1$,.2f", pricePerProduct));
+                viewHolder.setSubtotal(pricePerProduct);
+
+                if (productName.equalsIgnoreCase("Jugos") || productName.equalsIgnoreCase("Ensaladas") || productName.equalsIgnoreCase("Aguas")) {
+                    viewHolder.getSubTotalPrice().setVisibility(View.GONE);
+                    viewHolder.numberPicker.setVisibility(View.GONE);
+                } else {
+                    // OnValueChangeListener
+                    viewHolder.numberPicker.setOnValueChangedListener((NumberPicker picker, int oldVal, int newVal) -> {
+                        double precioSubTotal = pricePerProduct * newVal;
+                        viewHolder.getSubTotalPrice().setText("Total a pagar: " + String.format("S/ %1$,.2f", precioSubTotal));
+                        viewHolder.setSubtotal(precioSubTotal);
+                        // viewHolder.cbFruit.setChecked(true);
+                    });
+                }
+
+                viewHolder.cbFruit.setOnClickListener(v -> {
+                    if (viewHolder.cbFruit.isChecked()) {
+                        viewHolder.cbFruit.setChecked(true);
+                        fruitStates.append(position, true);
+                        // personalFruitViewHolders.add(viewHolder);
+                        fruits.add(model);
+                    } else {
+                        viewHolder.cbFruit.setChecked(false);
+                        fruitStates.append(position, false);
+                        // personalFruitViewHolders.remove(viewHolder);
+                        fruits.remove(model);
                     }
                 });
             }
