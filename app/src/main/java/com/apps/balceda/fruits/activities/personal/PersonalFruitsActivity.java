@@ -33,7 +33,7 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
     String productPrice;
     String productImg;
     double additional;
-    String detail;
+    StringBuilder detail;
 
     FirebaseDatabase database;
     DatabaseReference fruitsReference;
@@ -45,9 +45,9 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
 
     Button button;
 
-    ArrayList<PersonalFruitViewHolder> personalFruitViewHolders;
-    ArrayList<Fruit> fruits;
+    // Selected fruits in a product
     SparseBooleanArray fruitStates;
+    ArrayList<Fruit> fruits;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +63,6 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
         productPrice = getIntent().getExtras().getString("productPrice");
         productImg = getIntent().getExtras().getString("productImage");
 
-        personalFruitViewHolders = new ArrayList<>();
         fruits = new ArrayList<>();
         fruitStates = new SparseBooleanArray();
 
@@ -85,14 +84,16 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
     }
 
     private void calcular() {
-        if (personalFruitViewHolders.size() > 0) {
-            detail = "";
-            for (int i = 0; i < personalFruitViewHolders.size(); i++) {
-                additional += personalFruitViewHolders.get(i).getSubtotal();
-                if ((i + 1) == personalFruitViewHolders.size()) {
-                    detail += personalFruitViewHolders.get(i).getFruitName().getText().toString() + ".";
+        if (fruits.size() > 0) {
+            detail = new StringBuilder();
+            for (int i = 0; i < fruits.size(); i++) {
+                additional += (Double.parseDouble(fruits.get(i).getPriceUnit()) * Double.parseDouble(productPrice));
+                if ((i + 1) == fruits.size()) {
+                    detail.append(fruits.get(i).getName());
+                    detail.append(".");
                 } else {
-                    detail += personalFruitViewHolders.get(i).getFruitName().getText().toString() + ", ";
+                    detail.append(fruits.get(i).getName());
+                    detail.append(", ");
                 }
             }
             Intent intent = new Intent(PersonalFruitsActivity.this, ProductDetailsActivity.class);
@@ -100,7 +101,7 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
             intent.putExtra("productPrice", productPrice);
             intent.putExtra("productImage", productImg);
             intent.putExtra("additional", additional);
-            intent.putExtra("detail", detail);
+            intent.putExtra("detail", detail.toString());
             intent.putExtra("fruits", fruits);
             startActivity(intent);
             finish();
@@ -146,12 +147,12 @@ public class PersonalFruitsActivity extends AppCompatActivity implements SearchV
                     if (viewHolder.cbFruit.isChecked()) {
                         viewHolder.cbFruit.setChecked(true);
                         fruitStates.append(position, true);
-                        personalFruitViewHolders.add(viewHolder);
+                        // personalFruitViewHolders.add(viewHolder);
                         fruits.add(model);
                     } else {
                         viewHolder.cbFruit.setChecked(false);
                         fruitStates.append(position, false);
-                        personalFruitViewHolders.remove(viewHolder);
+                        // personalFruitViewHolders.remove(viewHolder);
                         fruits.remove(model);
                     }
                 });
